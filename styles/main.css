@@ -1,0 +1,715 @@
+/* =========================
+   THEME TOKENS
+   ========================= */
+   :root {
+    --bg: #050816;
+    --bg-2: #0b1a33;
+    --accent-1: #8e24aa;
+    --accent-2: #4fc3f7;
+    --accent-3: #74e0ff;
+    --accent-4: #c8a7ff;
+    --card: #0b1430;
+    --ink: #f8faff;
+    --ink-soft: #d6e0f0;
+    --ink-muted: #a2b0c8;
+    --radius-lg: 1.5rem;
+    --radius-pill: 999px;
+    --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.45);
+    --shadow-light: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* =========================
+     GLOBAL / LAYOUT  (MOBILE-FIRST)
+     ========================= */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    background: linear-gradient(
+      180deg,
+      #f7f3ff 0%,
+      #e6ecff 40%,
+      #d4e5ff 75%,
+      #c8a7ff 100%
+    );
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+  
+  /* =========================
+     HEADER & NAV  (MOBILE-FIRST)
+     ========================= */
+  .site-header {
+    width: 100%;
+    margin: 0;
+    padding: 0.4rem 0 -2rem;     /* mobile header height */
+    background: linear-gradient(90deg, #f4f7ff, #e6ecff);
+    border-bottom: 1px solid #c9d2ea;
+    z-index: 20;
+  }
+  
+  /* row: logo left, nav right (you liked this on mobile) */
+  .header-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* logo + title block */
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  /* logo image */
+  .logo-area img {
+    width: 105px;
+    max-width: 40vw;
+    height: auto;
+    margin-top: 4px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    display: block;
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+  
+  /* site title text */
+  .site-title {
+    line-height: 1.2;
+  }
+  
+  .site-title h1 {
+    font-family: "Cinzel", serif;
+    font-size: 1rem;
+    margin: 0;
+    color: #1c2a4b;
+  }
+  
+  .site-title p {
+    margin: 0.1rem 0 0;
+    font-size: 0.85rem;
+    color: #5d6d8a;
+  }
+  
+  /* nav buttons (mobile) */
+  .main-nav {
+    display: flex;
+    gap: 30px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 50px;
+    margin-bottom: 20px;
+  }
+  
+  .main-nav a {
+    padding: 0.4rem 1.1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #1c2a4b;
+    background: #ffffff;
+    border: 2px solid rgba(140, 100, 255, 0.65);
+    box-shadow: 0 0 0 3px #ffffff, 0 0 12px rgba(160, 120, 255, 0.75);
+    transition: all 0.2s ease;
+  }
+  
+  .main-nav a:hover {
+    box-shadow: 0 0 0 3px #ffffff, 0 0 18px rgba(180, 140, 255, 0.9);
+    transform: translateY(-2px);
+  }
+  
+  .main-nav a.active {
+    background: linear-gradient(135deg, #7856ff, #b491ff);
+    color: #ffffff;
+    border-color: rgba(120, 80, 255, 0.9);
+    box-shadow: 0 0 0 3px #ffffff, 0 0 18px rgba(150, 110, 255, 0.95);
+  }
+  
+  /* =========================
+     HERO / BANNER  (MOBILE-FIRST)
+     ========================= */
+  .hero {
+    width: 100vw;
+    max-width: none;
+    margin: 0 calc(-50vw + 50%); /* full-bleed */
+    min-height: 60vh;
+    padding: 2.5rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+    color: #ffffff;
+  }
+  
+  .hero::before {
+    content: none;
+  }
+  
+  /* home hero image */
+  .home-hero {
+    background-image: url("../images/img4.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+  }
+  
+  /* journal hero image */
+  .journal-hero {
+    background-image: url("../images/journal3.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 60%;
+  }
+  
+  /* hero text content */
+  .hero-content {
+    max-width: 680px;
+    text-align: center;
+    z-index: 2;
+    padding-inline: 0.5rem;
+  }
+  
+  .hero h2 {
+    font-family: "Cinzel", serif;
+    font-size: 2rem;
+    margin: 0 0 1rem;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+  }
+  
+  .hero p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    color: #fefefe;
+  }
+  
+  /* =========================
+     MAIN SECTIONS (GENERATOR / JOURNAL)
+     ========================= */
+  .generator-section,
+  .journal-section {
+    padding: 2rem 1.25rem 3.5rem;
+  }
+  
+  .generator-section h2,
+  .journal-section h2 {
+    font-family: "Cinzel", serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1a2240;
+    text-shadow: none;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  
+  .generator-section > p,
+  .journal-section > p {
+    margin-top: 0;
+    color: var(--ink-muted);
+  }
+  
+  /* =========================
+     GENERATOR CARD (HOME)
+     ========================= */
+  .generator-controls,
+  .generator-result {
+    background: linear-gradient(
+      160deg,
+      rgba(45, 0, 70, 0.95),
+      rgba(116, 224, 255, 0.1)
+    );
+    border-radius: 2.2rem;
+    padding: 2rem;
+    border: 1px solid rgba(160, 120, 255, 0.35);
+    box-shadow: 0 15px 50px rgba(40, 0, 70, 0.55);
+  }
+  
+  .generator-controls {
+    margin-top: 1rem;
+    display: grid;
+    gap: 1rem;
+  }
+  
+  /* labels in generator form */
+  .generator-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 1rem;
+    color: var(--ink-soft);
+  }
+  
+  /* selects in generator */
+  .generator-controls select {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(116, 224, 255, 0.65);
+    background: radial-gradient(
+        circle at top left,
+        rgba(116, 224, 255, 0.25),
+        transparent 55%
+      ),
+      rgba(5, 8, 22, 0.95);
+    color: var(--ink);
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 0 12px rgba(74, 224, 255, 0.3);
+    appearance: none;
+  }
+  
+  /* generate button placement */
+  #generateBtn {
+    justify-self: center;
+    margin-top: 0.25rem;
+  }
+  
+  /* scripture result card */
+  .generator-result {
+    margin-top: 1.5rem;
+  }
+  
+  .generator-result h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+    color: var(--accent-3);
+  }
+  
+  #scriptureText {
+    margin: 0 0 0.6rem;
+    line-height: 1.85;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    color: #f4fbff;
+  }
+  
+  .reference {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    color: var(--accent-2);
+  }
+  
+  .result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  /* =========================
+     JOURNAL LIST (SAVED VERSES)
+     ========================= */
+  .journal-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  /* journal card */
+  .journal-card {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.97),
+      rgba(232, 238, 255, 0.98)
+    );
+    border-radius: 1.5rem;
+    padding: 0.9rem 1.2rem 1.1rem;
+    box-shadow: 0 18px 40px rgba(31, 51, 120, 0.16);
+    border: 1px solid rgba(140, 100, 255, 0.18);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  
+  .journal-card:hover {
+    box-shadow: 0 22px 50px rgba(31, 51, 120, 0.22);
+    transform: translateY(-2px);
+  }
+  
+  /* reference line (#, book, volume) */
+  .journal-reference {
+    margin: 0 0 0.35rem;
+    font-size: 0.95rem;
+    color: #354069;
+  }
+  
+  /* #1, #2, #3 index */
+  .journal-index {
+    font-weight: 700;
+    color: var(--accent-1);
+    margin-right: 0.45rem;
+  }
+  
+  /* scripture text in journal */
+  .journal-scripture {
+    margin: 0.35rem 0 0.75rem;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    color: #2c3459;
+  }
+  
+  .journal-scripture p {
+    margin: 0 0 0.55rem;
+    line-height: 1.7;
+  }
+  
+  /* verse numbers in journal paragraphs */
+  .journal-scripture .verse-num,
+  .journal-scripture .verse-number {
+    font-weight: 700;
+    color: var(--accent-2);
+    margin-right: 0.35rem;
+    font-size: 0.95em;
+  }
+  
+  /* journal notes textarea */
+  .journal-notes {
+    width: 100%;
+    min-height: 90px;
+    border-radius: 1rem;
+    border: 1px solid rgba(140, 100, 255, 0.4);
+    background: #f9f6ff;
+    color: #1a2240;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    margin-bottom: 0.75rem;
+  }
+  
+  .journal-notes::placeholder {
+    color: #b1b4d4;
+  }
+  
+  .journal-notes:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(140, 100, 255, 0.45);
+  }
+  
+  /* buttons under scripture text */
+  .journal-controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  
+  /* Add Journal toggle button */
+  .add-journal-btn {
+    padding: 0.45rem 1.2rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(200, 167, 255, 0.8);
+    background: #ffffff;
+    color: #4a3e7a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.1s ease, box-shadow 0.1s ease,
+      background 0.15s ease, color 0.15s ease;
+  }
+  
+  .add-journal-btn:hover {
+    background: #f4ecff;
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+  }
+  
+  /* Unsave button */
+  .unsave-btn {
+    padding: 0.45rem 1.2rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(142, 36, 170, 0.7);
+    background: #ffffff;
+    color: #8e24aa;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.1s ease, box-shadow 0.1s ease,
+      background 0.15s ease, color 0.15s ease;
+  }
+  
+  .unsave-btn:hover {
+    background: #f4ecff;
+    color: #6b1b86;
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+  }
+  
+  /* notes + Save button wrapper */
+  .journal-notes-wrapper {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .journal-notes-wrapper .save-notes-btn {
+    align-self: flex-end;
+    padding-inline: 1.7rem;
+    width: auto;
+  }
+  
+  /* =========================
+     BUTTONS (GLOBAL)
+     ========================= */
+  button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  
+  /* primary buttons */
+  #generateBtn,
+  #copyBtn,
+  #favoriteBtn,
+  .save-notes-btn {
+    padding: 0.55rem 1.3rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+    color: #021017;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.15s ease, box-shadow 0.15s ease,
+      background 0.2s ease, filter 0.15s ease;
+    transform: translateY(0) scale(1);
+  }
+  
+  #generateBtn:hover,
+  #copyBtn:hover,
+  #favoriteBtn:hover,
+  .save-notes-btn:hover {
+    background: linear-gradient(135deg, var(--accent-3), var(--accent-4));
+    transform: translateY(-2px) scale(1.05);
+    filter: brightness(1.05);
+    box-shadow: 0 14px 30px rgba(40, 0, 70, 0.6);
+  }
+  
+  #generateBtn:active,
+  #copyBtn:active,
+  #favoriteBtn:active,
+  .save-notes-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--shadow-light);
+    filter: brightness(0.98);
+  }
+  
+  /* =========================
+     FOOTER
+     ========================= */
+  .site-footer {
+    width: 100%;
+    padding: 1rem 5vw 1.4rem;
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+    background: rgba(3, 10, 20, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  /* =========================
+     VERSE FORMATTING (HOME)
+     ========================= */
+  .verse-line {
+    margin: 0.35rem 0 0.75rem;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    color: #eefaff;
+  }
+  
+  .verse-number {
+    font-weight: 700;
+    margin-right: 0.4rem;
+    color: var(--accent-3);
+  }
+  
+  #scriptureText p {
+    margin: 0 0 0.6rem;
+    line-height: 1.7;
+  }
+  
+  #scriptureText .verse-num {
+    font-weight: 600;
+    color: var(--accent-3);
+    margin-right: 0.35rem;
+    font-size: 0.95em;
+  }
+  
+  /* =========================
+     RESPONSIVE – SMALL / MEDIUM
+     (phones & small tablets)
+     ========================= */
+  @media (max-width: 600px) {
+    .header-inner {
+      padding-inline: 1rem;
+    }
+  
+    .logo-area img {
+      width: 100px;
+    }
+  
+    .main-nav a {
+      padding: 0.35rem 1rem;
+      font-size: 0.85rem;
+    }
+  
+    .hero {
+      padding-inline: 1rem;
+      min-height: 65vh;
+    }
+  
+    .hero h2 {
+      font-size: 1.8rem;
+    }
+  
+    .hero p {
+      font-size: 0.98rem;
+    }
+  
+    .generator-section,
+    .journal-section {
+      padding-inline: 1rem;
+    }
+  
+    .generator-controls,
+    .generator-result {
+      padding: 1.7rem;
+    }
+  }
+  
+  /* mid-width tablets */
+  @media (max-width: 900px) {
+    .header-inner {
+      padding-inline: 1.5rem;
+    }
+  }
+  
+  /* =========================
+     RESPONSIVE – TABLET / DESKTOP
+     ========================= */
+  @media (min-width: 768px) {
+    .hero {
+      min-height: 70vh;
+      padding: 4rem 3rem;
+      margin: 0 calc(-50vw + 50%);
+    }
+  
+    .generator-section,
+    .journal-section {
+      padding-inline: 3rem;
+    }
+  
+    .generator-controls {
+      grid-template-columns: 1fr 1fr auto;
+      align-items: flex-end;
+    }
+  
+    #generateBtn {
+      margin-top: 0;
+    }
+  
+    .result-actions {
+      justify-content: flex-end;
+    }
+  }
+ /* =========================
+   DESKTOP VIEW (>= 1024px)
+   – smaller header + centered nav
+   ========================= */
+@media (min-width: 1024px) {
+    .site-header {
+      padding: 0.5rem 0.3rem;           /* shorter header */
+    }
+  
+    .header-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 1.8rem;
+      gap: 2.5rem;
+    }
+  
+    .logo-area {
+      justify-content: flex-start;
+      margin-left: 50px;           /* keep your original left shift */
+    }
+  
+    .logo-area img {
+      width: 130px;                /* a bit smaller */
+      margin-top: 10px;               /* remove extra space above logo */
+    }
+  
+    .site-title h1 {
+      font-size: 1.2rem;
+    }
+  
+    .site-title p {
+      font-size: 0.95rem;
+    }
+  
+    .main-nav {
+      flex: 1;                     /* use remaining space */
+      justify-content: center;     /* center Home / Journal */
+      margin-top: -2.2rem;         /* move nav UP slightly */
+      margin-bottom: 10px;            /* override global 1rem bottom margin */
+      position: relative;
+    }
+  
+    .main-nav a {
+      padding: 0.55rem 1.3rem;
+      font-size: 1rem;
+    }
+  
+    .home-hero .hero-content {
+      margin-left: 700px;          /* keep your desktop hero text offset */
+    }
+  
+    .hero {
+      min-height: 75vh;
+    }
+  
+    .hero-content h2 {
+      font-size: 3rem;
+    }
+  
+    .generator-section,
+    .journal-section {
+      padding-bottom: 4rem;
+    }
+  }
+  

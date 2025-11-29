@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Souls | Home</title>
+
+  <!-- Basic SEO -->
+  <meta name="description" content="Souls is a scripture generator that helps you find uplifting verses and chapters to guide your day and deepen your spiritual study.">
+  <meta name="author" content="Souls Scripture Generator">
+
+  <!-- Favicon (optional but good for Lighthouse; update the path/file if needed) -->
+  <link rel="icon" href="images/soulslogo.png" type="image/png">
+
+  <!-- Performance: preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Performance: preload hero image (update to .webp if you convert it) -->
+  <link rel="preload" as="image" href="images/img4.jpg">
+
+  <!-- Main styles -->
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo-area">
+      <!-- width/height help reduce layout shift -->
+      <img
+        src="images/soulslogo.png"
+        alt="Souls logo"
+        width="140"
+        height="140"
+      >
+      <div class="site-title">
+        <h1>Souls</h1>
+        <p>Words that lift the soul</p>
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" class="active">Home</a>
+      <a href="journal.html">Journal</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO section -->
+    <section class="hero home-hero" aria-labelledby="hero-heading">
+      <div class="hero-content">
+        <h2 id="hero-heading">Find peace in the scriptures</h2>
+        <p>Generate uplifting verses and chapters to guide your day.</p>
+      </div>
+    </section>
+
+    <!-- SCRIPTURE GENERATOR CARD -->
+    <section class="generator-section" aria-labelledby="generator-heading">
+      <h2 id="generator-heading">Scripture Generator</h2>
+
+      <div class="generator-controls">
+        <label for="bookSelect">
+          Scriptures:
+          <select id="bookSelect" name="scriptures">
+            <option value="">Choose Scriptures</option>
+          </select>
+        </label>
+
+        <label for="modeSelect">
+          Mode:
+          <select id="modeSelect" name="mode">
+            <option value="">Choose Chapter / Verse</option>
+            <option value="verse">Verse</option>
+            <option value="chapter">Chapter</option>
+          </select>
+        </label>
+
+        <button id="generateBtn" type="button">Generate</button>
+      </div>
+
+      <article class="generator-result" id="resultCard" aria-live="polite">
+        <h3>Result</h3>
+        <!-- aria-live here so updates are announced to screen readers -->
+        <p id="scriptureText">Your scripture will appear here.</p>
+        <p id="scriptureRef" class="reference"></p>
+
+        <div class="result-actions">
+          <button id="copyBtn" type="button">Copy Verse</button>
+          <button id="favoriteBtn" type="button">Add to Journal</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Souls – Scripture Generator</p>
+  </footer>
+
+  <!-- Module script (loads after content for better performance) -->
+  <script src="scripts/main.js" type="module"></script>
+</body>
+</html>

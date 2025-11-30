@@ -4,8 +4,9 @@
 const yearSpans = document.querySelectorAll("#year");
 const journalList = document.querySelector("#journalList");
 
-const FAVORITES_KEY = "soulsFavorites";
-const NOTES_KEY = "soulsNotes";
+// We keep these keys so existing data keeps working
+const FAVORITES_KEY = "soulsFavorites";  // stores saved scriptures
+const NOTES_KEY = "soulsNotes";          // stores notes for each scripture
 
 // ---------- INIT ----------
 init();
@@ -13,25 +14,25 @@ init();
 function init() {
   setCurrentYear();
 
-  const favorites = loadFavorites();
+  const savedEntries = loadFavorites();
 
-  if (!favorites.length) {
+  if (!savedEntries.length) {
     journalList.innerHTML = `
       <p class="empty-message">
-        You don't have any favorites yet. Go to the Home page,
-        generate a scripture, and click <strong>Add to Favorites</strong>.
+        You don't have any saved scriptures yet. Go to the Home page,
+        generate a scripture, and click <strong>Add to Journal</strong>.
       </p>
     `;
     return;
   }
 
-  renderJournalEntries(favorites);
+  renderJournalEntries(savedEntries);
 }
 
 // ---------- UTILITIES ----------
 function setCurrentYear() {
   const year = new Date().getFullYear();
-  yearSpans.forEach(span => (span.textContent = year));
+  yearSpans.forEach((span) => (span.textContent = year));
 }
 
 function loadFavorites() {
@@ -40,7 +41,7 @@ function loadFavorites() {
   try {
     return JSON.parse(stored);
   } catch (err) {
-    console.error("Error parsing favorites:", err);
+    console.error("Error parsing saved scriptures:", err);
     return [];
   }
 }
@@ -69,13 +70,13 @@ function makeEntryKey(fav) {
 }
 
 function escapeHTML(str = "") {
-  return str.replace(/[&<>"']/g, ch => {
+  return str.replace(/[&<>"']/g, (ch) => {
     const map = {
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
-      "'": "&#39;"
+      "'": "&#39;",
     };
     return map[ch] || ch;
   });
@@ -103,11 +104,15 @@ function renderJournalEntries(favorites) {
 
       <div class="journal-controls-row">
         <button class="add-journal-btn">Add Journal ▸</button>
-        <button class="unsave-btn">Unsave</button>
+        <button class="unsave-btn">Remove</button>
       </div>
 
       <div class="journal-notes-wrapper">
-        <textarea class="journal-notes" placeholder="Write your thoughts here..." hidden></textarea>
+        <textarea
+          class="journal-notes"
+          placeholder="Write your thoughts here..."
+          hidden
+        ></textarea>
         <button class="save-notes-btn" hidden>Save Journal</button>
         <p class="journal-status" aria-live="polite"></p>
       </div>
@@ -122,15 +127,15 @@ function renderJournalEntries(favorites) {
 
     // ---- Scripture content with verse numbers ----
     if (fav.html) {
-      // New favorites: already formatted with <span class="verse-num">
+      // New entries: already formatted with <span class="verse-num">
       scriptureEl.innerHTML = fav.html;
     } else if (fav.mode === "verse" && fav.verse) {
-      // Old single-verse favorites
+      // Old single-verse entries
       scriptureEl.innerHTML = `<p><span class="verse-num">${escapeHTML(
         String(fav.verse)
       )}</span> ${escapeHTML(fav.text || "")}</p>`;
     } else {
-      // Old chapter favorites without html
+      // Old chapter entries without html
       scriptureEl.textContent = fav.text || "";
     }
 
@@ -153,15 +158,15 @@ function renderJournalEntries(favorites) {
       setTimeout(() => (status.textContent = ""), 1200);
     });
 
-    // ---- Unsave ----
+    // ---- Remove saved scripture ----
     unsaveBtn.addEventListener("click", () => {
       const confirmDelete = window.confirm(
-        "Are you sure you want to unsave this scripture?"
+        "Are you sure you want to remove this scripture from your journal?"
       );
       if (!confirmDelete) return;
 
       let updatedFavs = loadFavorites();
-      updatedFavs = updatedFavs.filter(f => makeEntryKey(f) !== entryKey);
+      updatedFavs = updatedFavs.filter((f) => makeEntryKey(f) !== entryKey);
       saveFavorites(updatedFavs);
 
       const updatedNotes = loadNotes();

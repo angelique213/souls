@@ -175,15 +175,15 @@
     content: none;
   }
   
-  /* home hero image */
+  /* home hero image (default: desktop/tablet) */
   .home-hero {
     background-image: url("../images/img4.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center top;
+    background-position: center 15%;
   }
   
-  /* journal hero image */
+  /* journal hero image (default: desktop/tablet) */
   .journal-hero {
     background-image: url("../images/journal3.jpeg");
     background-size: cover;
@@ -593,6 +593,17 @@
       min-height: 65vh;
     }
   
+    /* ✅ MOBILE HERO IMAGES */
+    .home-hero {
+      background-image: url("../images/imgmobile1.jpeg");
+      background-position: center top;
+    }
+  
+    .journal-hero {
+      background-image: url("../images/mobilejournal2.jpeg");
+      background-position: center 60%;
+    }
+  
     .hero h2 {
       font-size: 1.8rem;
     }
@@ -647,13 +658,14 @@
       justify-content: flex-end;
     }
   }
- /* =========================
-   DESKTOP VIEW (>= 1024px)
-   – smaller header + centered nav
-   ========================= */
-@media (min-width: 1024px) {
+  
+  /* =========================
+     DESKTOP VIEW (>= 1024px)
+     – smaller header + centered nav
+     ========================= */
+  @media (min-width: 1024px) {
     .site-header {
-      padding: 0.5rem 0.3rem;           /* shorter header */
+      padding: 0.5rem 0.3rem; 
     }
   
     .header-inner {
@@ -666,12 +678,12 @@
   
     .logo-area {
       justify-content: flex-start;
-      margin-left: 50px;           /* keep your original left shift */
+      margin-left: 50px; 
     }
   
     .logo-area img {
-      width: 130px;                /* a bit smaller */
-      margin-top: 10px;               /* remove extra space above logo */
+      width: 130px; 
+      margin-top: 10px;  
     }
   
     .site-title h1 {
@@ -683,10 +695,10 @@
     }
   
     .main-nav {
-      flex: 1;                     /* use remaining space */
-      justify-content: center;     /* center Home / Journal */
-      margin-top: -2.2rem;         /* move nav UP slightly */
-      margin-bottom: 10px;            /* override global 1rem bottom margin */
+      flex: 1;    
+      justify-content: center; 
+      margin-top: -2.2rem; 
+      margin-bottom: 10px; 
       position: relative;
     }
   
@@ -696,7 +708,7 @@
     }
   
     .home-hero .hero-content {
-      margin-left: 700px;          /* keep your desktop hero text offset */
+      margin-left: 700px; 
     }
   
     .hero {

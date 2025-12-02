@@ -4,16 +4,15 @@
 const yearSpans = document.querySelectorAll("#year");
 const journalList = document.querySelector("#journalList");
 
-// We keep these keys so existing data keeps working
-const FAVORITES_KEY = "soulsFavorites";  // stores saved scriptures
-const NOTES_KEY = "soulsNotes";          // stores notes for each scripture
+// keys
+const FAVORITES_KEY = "soulsFavorites";
+const NOTES_KEY = "soulsNotes";
 
 // ---------- INIT ----------
 init();
 
 function init() {
   setCurrentYear();
-
   const savedEntries = loadFavorites();
 
   if (!savedEntries.length) {
@@ -21,8 +20,7 @@ function init() {
       <p class="empty-message">
         You don't have any saved scriptures yet. Go to the Home page,
         generate a scripture, and click <strong>Add to Journal</strong>.
-      </p>
-    `;
+      </p>`;
     return;
   }
 
@@ -40,8 +38,7 @@ function loadFavorites() {
   if (!stored) return [];
   try {
     return JSON.parse(stored);
-  } catch (err) {
-    console.error("Error parsing saved scriptures:", err);
+  } catch {
     return [];
   }
 }
@@ -55,14 +52,13 @@ function loadNotes() {
   if (!stored) return {};
   try {
     return JSON.parse(stored);
-  } catch (err) {
-    console.error("Error parsing notes:", err);
+  } catch {
     return {};
   }
 }
 
-function saveNotes(notesObj) {
-  localStorage.setItem(NOTES_KEY, JSON.stringify(notesObj));
+function saveNotes(n) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(n));
 }
 
 function makeEntryKey(fav) {
@@ -108,11 +104,7 @@ function renderJournalEntries(favorites) {
       </div>
 
       <div class="journal-notes-wrapper">
-        <textarea
-          class="journal-notes"
-          placeholder="Write your thoughts here..."
-          hidden
-        ></textarea>
+        <textarea class="journal-notes" placeholder="Write your thoughts here..." hidden></textarea>
         <button class="save-notes-btn" hidden>Save Journal</button>
         <p class="journal-status" aria-live="polite"></p>
       </div>
@@ -125,48 +117,40 @@ function renderJournalEntries(favorites) {
     const saveBtn = article.querySelector(".save-notes-btn");
     const status = article.querySelector(".journal-status");
 
-    // ---- Scripture content with verse numbers ----
+    // HTML scripture content
     if (fav.html) {
-      // New entries: already formatted with <span class="verse-num">
       scriptureEl.innerHTML = fav.html;
     } else if (fav.mode === "verse" && fav.verse) {
-      // Old single-verse entries
-      scriptureEl.innerHTML = `<p><span class="verse-num">${escapeHTML(
-        String(fav.verse)
-      )}</span> ${escapeHTML(fav.text || "")}</p>`;
+      scriptureEl.innerHTML = `<p><span class="verse-num">${fav.verse}</span> ${escapeHTML(fav.text)}</p>`;
     } else {
-      // Old chapter entries without html
       scriptureEl.textContent = fav.text || "";
     }
 
-    // ---- Notes ----
+    // notes
     textarea.value = savedNote;
 
     toggleBtn.addEventListener("click", () => {
-      const willShow = textarea.hidden;
-      textarea.hidden = !willShow;
-      saveBtn.hidden = !willShow;
-      toggleBtn.textContent = willShow ? "Hide Journal ▲" : "Add Journal ▸";
+      const show = textarea.hidden;
+      textarea.hidden = !show;
+      saveBtn.hidden = !show;
+      toggleBtn.textContent = show ? "Hide Journal ▲" : "Add Journal ▸";
     });
 
     saveBtn.addEventListener("click", () => {
-      const updatedNotes = loadNotes();
-      updatedNotes[entryKey] = textarea.value.trim();
-      saveNotes(updatedNotes);
+      const updated = loadNotes();
+      updated[entryKey] = textarea.value.trim();
+      saveNotes(updated);
 
       status.textContent = "Saved!";
       setTimeout(() => (status.textContent = ""), 1200);
     });
 
-    // ---- Remove saved scripture ----
     unsaveBtn.addEventListener("click", () => {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to remove this scripture from your journal?"
-      );
-      if (!confirmDelete) return;
+      if (!window.confirm("Remove this scripture from your journal?")) return;
 
-      let updatedFavs = loadFavorites();
-      updatedFavs = updatedFavs.filter((f) => makeEntryKey(f) !== entryKey);
+      let updatedFavs = loadFavorites().filter(
+        (f) => makeEntryKey(f) !== entryKey
+      );
       saveFavorites(updatedFavs);
 
       const updatedNotes = loadNotes();

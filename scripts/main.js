@@ -14,27 +14,15 @@ const generateBtn = document.querySelector("#generateBtn");
 const scriptureTextEl = document.querySelector("#scriptureText");
 const scriptureRefEl = document.querySelector("#scriptureRef");
 const copyBtn = document.querySelector("#copyBtn");
-const favoriteBtn = document.querySelector("#favoriteBtn"); // "Add to Journal" button
+const favoriteBtn = document.querySelector("#favoriteBtn");
 
 // ---------- INIT ----------
 init();
 
-async function init() {
+function init() {
   setCurrentYear();
-
-  try {
-    const data = await loadAllScriptures();
-    verses = data.verses;
-    chapters = data.chapters;
-
-    populateScriptureSelect();
-    wireEvents();
-  } catch (err) {
-    console.error(err);
-    showMessage(
-      "There was a problem loading the scriptures. Please try again later."
-    );
-  }
+  populateScriptureSelect();
+  wireEvents();
 }
 
 // ---------- UTILITIES ----------
@@ -52,10 +40,6 @@ function escapeHtml(str = "") {
     .replace(/'/g, "&#039;");
 }
 
-/**
- * For chapters: build the same HTML we show on Home
- * (each verse with a number).
- */
 function buildChapterHtml(entry) {
   if (!entry) return "";
 
@@ -98,13 +82,13 @@ function populateScriptureSelect() {
 }
 
 function wireEvents() {
-  if (generateBtn) generateBtn.addEventListener("click", handleGenerate);
-  if (copyBtn) copyBtn.addEventListener("click", handleCopy);
-  if (favoriteBtn) favoriteBtn.addEventListener("click", handleSaveToJournal);
+  generateBtn.addEventListener("click", handleGenerate);
+  copyBtn.addEventListener("click", handleCopy);
+  favoriteBtn.addEventListener("click", handleSaveToJournal);
 }
 
 // ---------- CORE LOGIC ----------
-function handleGenerate() {
+async function handleGenerate() {
   const selectedCollection = bookSelect.value;
   const selectedMode = modeSelect.value;
 
@@ -119,21 +103,34 @@ function handleGenerate() {
     return;
   }
 
-  let matches = [];
-
-  if (selectedMode === "verse") {
-    matches = filterByCollection(verses, selectedCollection);
-  } else if (selectedMode === "chapter") {
-    matches = filterByCollection(chapters, selectedCollection);
+  // Lazy-load scriptures only when needed
+  if (!verses.length || !chapters.length) {
+    try {
+      const data = await loadAllScriptures();
+      verses = data.verses;
+      chapters = data.chapters;
+    } catch (err) {
+      console.error(err);
+      showMessage(
+        "There was a problem loading the scriptures. Please try again later."
+      );
+      return;
+    }
   }
 
-  if (matches.length === 0) {
-    showMessage("No scriptures found yet for that combination.");
+  let matches = [];
+  if (selectedMode === "chapter") {
+    matches = filterByCollection(chapters, selectedCollection);
+  } else {
+    matches = filterByCollection(verses, selectedCollection);
+  }
+
+  if (!matches.length) {
+    showMessage("No scriptures found for that combination.");
     return;
   }
 
-  const randomIndex = Math.floor(Math.random() * matches.length);
-  const picked = matches[randomIndex];
+  const picked = matches[Math.floor(Math.random() * matches.length)];
 
   currentScripture = {
     ...picked,
@@ -151,35 +148,26 @@ function filterByCollection(items, collection) {
       (item) =>
         item.volume === "Old Testament" || item.volume === "New Testament"
     );
-  } else {
-    return items.filter((item) => item.volume === collection);
   }
+  return items.filter((item) => item.volume === collection);
 }
 
-/**
- * Display a verse or a chapter and also store
- * a formattedHtml version inside currentScripture
- * so the journal page can use it.
- */
 function displayScripture(entry, modeOverride) {
   if (!entry) return;
 
   const mode =
     modeOverride ||
     currentScripture?.mode ||
-    (typeof modeSelect !== "undefined" ? modeSelect.value : "verse");
+    modeSelect.value ||
+    "verse";
 
   if (mode === "chapter") {
     const html = buildChapterHtml(entry);
     scriptureTextEl.innerHTML = html;
-    if (currentScripture) currentScripture.formattedHtml = html;
+    currentScripture.formattedHtml = html;
   } else {
-    // Single verse mode – show verse number too
     const text = entry.text || "";
-    const verseNum =
-      typeof entry.verse !== "undefined" && entry.verse !== null
-        ? String(entry.verse)
-        : null;
+    const verseNum = entry.verse != null ? String(entry.verse) : null;
 
     let html;
     if (verseNum) {
@@ -191,7 +179,7 @@ function displayScripture(entry, modeOverride) {
     }
 
     scriptureTextEl.innerHTML = html;
-    if (currentScripture) currentScripture.formattedHtml = html;
+    currentScripture.formattedHtml = html;
   }
 
   scriptureRefEl.textContent = `${entry.reference} (${entry.volume})`;
@@ -203,7 +191,7 @@ function showMessage(message) {
   scriptureRefEl.textContent = "";
 }
 
-// ---------- COPY & "ADD TO JOURNAL" ----------
+// ---------- COPY ----------
 async function handleCopy() {
   if (!currentScripture) {
     showMessage("Generate a scripture first before copying.");
@@ -215,87 +203,57 @@ async function handleCopy() {
   try {
     await navigator.clipboard.writeText(fullText);
     scriptureRefEl.textContent = `${currentScripture.reference} (Copied!)`;
-  } catch (err) {
-    console.error("Clipboard error:", err);
-    scriptureRefEl.textContent = `${currentScripture.reference} (Copy not available in this browser.)`;
+  } catch {
+    scriptureRefEl.textContent = `${currentScripture.reference} (Copy not supported)`;
   }
 }
 
+// ---------- ADD TO JOURNAL ----------
 function handleSaveToJournal() {
   if (!currentScripture) {
-    showMessage("Generate a scripture first before adding it to your journal.");
+    showMessage("Generate a scripture first before adding to your journal.");
     return;
   }
 
-  // NOTE: we keep the same key used by journal.js for compatibility
   const favoritesKey = "soulsFavorites";
-
-  // 1) Read existing saved journal entries
   let favorites = [];
-  const stored = localStorage.getItem(favoritesKey);
 
+  const stored = localStorage.getItem(favoritesKey);
   if (stored) {
     try {
       favorites = JSON.parse(stored);
-    } catch (err) {
-      console.error("Error parsing saved journal entries from localStorage:", err);
+    } catch {
       favorites = [];
     }
   }
 
-  // 2) Avoid duplicates using reference + volume
   const alreadySaved = favorites.some(
-    (fav) =>
-      fav.reference === currentScripture.reference &&
-      fav.volume === currentScripture.volume
+    (f) =>
+      f.reference === currentScripture.reference &&
+      f.volume === currentScripture.volume
   );
 
   if (alreadySaved) {
-    scriptureRefEl.textContent = `${currentScripture.reference} (Already in your journal)`;
+    scriptureRefEl.textContent = `${currentScripture.reference} (Already saved)`;
     return;
   }
 
-  // Decide final mode
-  const mode =
-    currentScripture.mode || (currentScripture.verse ? "verse" : "chapter");
+  const formattedHtml =
+    currentScripture.formattedHtml ||
+    `<p>${escapeHtml(currentScripture.text)}</p>`;
 
-  // Ensure we have formattedHtml for journal page
-  let formattedHtml = currentScripture.formattedHtml || "";
-
-  if (!formattedHtml) {
-    if (mode === "chapter") {
-      formattedHtml = buildChapterHtml(currentScripture);
-    } else if (mode === "verse") {
-      const verseNum =
-        currentScripture.verse !== null &&
-        typeof currentScripture.verse !== "undefined"
-          ? String(currentScripture.verse)
-          : "";
-      if (verseNum) {
-        formattedHtml = `<p><span class="verse-num">${verseNum}</span> ${escapeHtml(
-          currentScripture.text || ""
-        )}</p>`;
-      } else {
-        formattedHtml = escapeHtml(currentScripture.text || "");
-      }
-    }
-  }
-
-  const entryToSave = {
+  favorites.push({
     volume: currentScripture.volume,
     book: currentScripture.book,
     chapter: currentScripture.chapter,
     verse: currentScripture.verse ?? null,
     reference: currentScripture.reference,
     text: currentScripture.text,
-    mode,
+    mode: currentScripture.mode,
     html: formattedHtml,
-  };
-
-  favorites.push(entryToSave);
+  });
 
   localStorage.setItem(favoritesKey, JSON.stringify(favorites));
 
-  scriptureRefEl.textContent = `${currentScripture.reference} (Added to your journal)`;
-  console.log("Saved journal entries:", favorites);
+  scriptureRefEl.textContent = `${currentScripture.reference} (Added to Journal!)`;
 }

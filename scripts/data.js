@@ -1,91 +1,103 @@
 // scripts/data.js
 
-// Load and flatten ALL scripture files
 export async function loadAllScriptures() {
-    const volumeFiles = [
-      { volume: "Book of Mormon", file: "data/book-of-mormon.json" },
-      { volume: "Doctrine and Covenants", file: "data/doctrine-and-covenants.json" },
-      { volume: "Old Testament", file: "data/old-testament.json" },
-      { volume: "New Testament", file: "data/new-testament.json" }
-    ];
-  
-    const allVerses = [];
-    const allChapters = [];
-  
-    for (const vf of volumeFiles) {
-      const res = await fetch(vf.file);
-      if (!res.ok) {
-        throw new Error(`Failed to load ${vf.file}`);
-      }
-      const json = await res.json();
-  
-      // ---------- CASE 1: books → chapters → verses (BoM, OT, NT) ----------
-      if (Array.isArray(json.books)) {
-        json.books.forEach(bookObj => {
-          const bookName = bookObj.book || bookObj.name || vf.volume;
-  
-          (bookObj.chapters || []).forEach(ch => {
-            const chapterNumber = ch.chapter ?? null;
-            const chapterRef = ch.reference || `${bookName} ${chapterNumber ?? ""}`.trim();
-  
-            const versesArr = ch.verses || [];
-  
-            const chapterText = versesArr.map(v => v.text).join(" ");
-  
-            allChapters.push({
-              volume: vf.volume,
-              book: bookName,
-              chapter: chapterNumber,
-              reference: chapterRef,
-              text: chapterText
-            });
-  
-            versesArr.forEach(v => {
-              allVerses.push({
-                volume: vf.volume,
-                book: bookName,
-                chapter: chapterNumber,
-                verse: v.verse,
-                reference: v.reference,
-                text: v.text
-              });
-            });
-          });
-        });
-      }
-  
-      // ---------- CASE 2: sections → verses (typical Doctrine & Covenants) ----------
-      if (Array.isArray(json.sections)) {
-        json.sections.forEach(sec => {
-          const bookName = "Doctrine and Covenants";
-          const sectionNumber = sec.section ?? sec.chapter ?? null;
-          const chapterRef = sec.reference || `D&C ${sectionNumber ?? ""}`.trim();
-          const versesArr = sec.verses || [];
-  
-          const chapterText = versesArr.map(v => v.text).join(" ");
-  
-          allChapters.push({
-            volume: vf.volume,
-            book: bookName,
-            chapter: sectionNumber,
-            reference: chapterRef,
-            text: chapterText
-          });
-  
-          versesArr.forEach(v => {
-            allVerses.push({
-              volume: vf.volume,
-              book: bookName,
-              chapter: sectionNumber,
-              verse: v.verse,
-              reference: v.reference,
-              text: v.text
-            });
-          });
-        });
-      }
-    }
-  
-    return { verses: allVerses, chapters: allChapters };
+  // simple in-memory cache so I only do the heavy work once
+  if (loadAllScriptures._cache) {
+    return loadAllScriptures._cache;
   }
-  
+
+  const res = await fetch("data/scriptures.json");
+  if (!res.ok) {
+    throw new Error("Failed to load data/scriptures.json");
+  }
+
+  // root = { oldTestament, newTestament, bookOfMormon, doctrineAndCovenants }
+  const root = await res.json();
+
+  const allVerses = [];
+  const allChapters = [];
+
+  // ---------- helper: volumes that use books → chapters → verses ----------
+  function processBooksVolume(volumeJson, volumeLabel) {
+    if (!volumeJson || !Array.isArray(volumeJson.books)) return;
+
+    volumeJson.books.forEach(bookObj => {
+      const bookName = bookObj.book || bookObj.name || volumeLabel;
+
+      (bookObj.chapters || []).forEach(ch => {
+        const chapterNumber = ch.chapter ?? null;
+        const chapterRef =
+          ch.reference || `${bookName} ${chapterNumber ?? ""}`.trim();
+
+        const versesArr = ch.verses || [];
+        const chapterText = versesArr.map(v => v.text).join(" ");
+
+        // chapter-level entry
+        allChapters.push({
+          volume: volumeLabel,
+          book: bookName,
+          chapter: chapterNumber,
+          reference: chapterRef,
+          text: chapterText
+        });
+
+        versesArr.forEach(v => {
+          allVerses.push({
+            volume: volumeLabel,
+            book: bookName,
+            chapter: chapterNumber,
+            verse: v.verse,
+            reference: v.reference,
+            text: v.text
+          });
+        });
+      });
+    });
+  }
+
+  // ---------- helper: Doctrine & Covenants (sections → verses) ----------
+  function processSectionsVolume(volumeJson, volumeLabel) {
+    if (!volumeJson || !Array.isArray(volumeJson.sections)) return;
+
+    volumeJson.sections.forEach(sec => {
+      const bookName = "Doctrine and Covenants";
+      const sectionNumber = sec.section ?? sec.chapter ?? null;
+      const chapterRef =
+        sec.reference || `D&C ${sectionNumber ?? ""}`.trim();
+      const versesArr = sec.verses || [];
+
+      const chapterText = versesArr.map(v => v.text).join(" ");
+
+      allChapters.push({
+        volume: volumeLabel,
+        book: bookName,
+        chapter: sectionNumber,
+        reference: chapterRef,
+        text: chapterText
+      });
+
+      versesArr.forEach(v => {
+        allVerses.push({
+          volume: volumeLabel,
+          book: bookName,
+          chapter: sectionNumber,
+          verse: v.verse,
+          reference: v.reference,
+          text: v.text
+        });
+      });
+    });
+  }
+
+  // ---------- process each volume ----------
+  processBooksVolume(root.bookOfMormon, "Book of Mormon");
+  processBooksVolume(root.oldTestament, "Old Testament");
+  processBooksVolume(root.newTestament, "New Testament");
+  processSectionsVolume(root.doctrineAndCovenants, "Doctrine and Covenants");
+
+  const result = { verses: allVerses, chapters: allChapters };
+
+  loadAllScriptures._cache = result; // cache it
+
+  return result;
+}

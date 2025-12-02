@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Souls | Journal</title>
 
-  <!-- Basic SEO -->
+  <!-- SEO -->
   <meta name="description" content="View and write impressions about your saved scripture verses in the Souls journal. Reflect on uplifting passages to strengthen your spirit.">
   <meta name="author" content="Souls Scripture Generator">
 
-  <!-- Favicon (optional; make sure path/file exists) -->
+  <!-- Favicon -->
   <link rel="icon" href="images/soulslogo.png" type="image/png">
 
-  <!-- Performance: preconnect to Google Fonts -->
+  <!-- preconnect to Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -22,8 +22,19 @@
     rel="stylesheet"
   >
 
-  <!-- Optional: preload journal hero image (update to .webp if you convert it) -->
-  <link rel="preload" as="image" href="images/journal3.jpg">
+  <!-- preload journal hero image: mobile + desktop -->
+  <link
+    rel="preload"
+    as="image"
+    href="images/mobilejournal2.jpeg"
+    media="(max-width: 600px)"
+  >
+  <link
+    rel="preload"
+    as="image"
+    href="images/journal3.jpeg"
+    media="(min-width: 601px)"
+  >
 
   <!-- Main styles -->
   <link rel="stylesheet" href="styles/main.css">
@@ -31,7 +42,7 @@
 <body>
   <header class="site-header">
     <div class="logo-area">
-      <!-- width/height reduce CLS -->
+
       <img
         src="images/soulslogo.png"
         alt="Souls logo"
@@ -63,7 +74,6 @@
     <section class="journal-section" aria-labelledby="journal-heading">
       <h2 id="journal-heading">Saved Scripture Verses</h2>
 
-      <!-- Filled dynamically by journal.js -->
       <div id="journalList" class="journal-list"></div>
     </section>
   </main>

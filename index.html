@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Souls | Home</title>
 
-  <!-- Basic SEO -->
+  <!-- SEO -->
   <meta name="description" content="Souls is a scripture generator that helps you find uplifting verses and chapters to guide your day and deepen your spiritual study.">
   <meta name="author" content="Souls Scripture Generator">
 
-  <!-- Favicon (optional but good for Lighthouse; update the path/file if needed) -->
+  <!-- Favicon -->
   <link rel="icon" href="images/soulslogo.png" type="image/png">
 
   <!-- Performance: preconnect to Google Fonts -->
@@ -22,8 +22,19 @@
     rel="stylesheet"
   >
 
-  <!-- Performance: preload hero image (update to .webp if you convert it) -->
-  <link rel="preload" as="image" href="images/img4.jpg">
+  <!-- preload hero image: mobile + desktop -->
+  <link
+    rel="preload"
+    as="image"
+    href="images/imgmobile1.jpeg"
+    media="(max-width: 600px)"
+  >
+  <link
+    rel="preload"
+    as="image"
+    href="images/img4.jpeg"
+    media="(min-width: 601px)"
+  >
 
   <!-- Main styles -->
   <link rel="stylesheet" href="styles/main.css">
@@ -31,7 +42,7 @@
 <body>
   <header class="site-header">
     <div class="logo-area">
-      <!-- width/height help reduce layout shift -->
+
       <img
         src="images/soulslogo.png"
         alt="Souls logo"

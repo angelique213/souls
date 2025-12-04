@@ -14,6 +14,7 @@ const generateBtn = document.querySelector("#generateBtn");
 const scriptureTextEl = document.querySelector("#scriptureText");
 const scriptureRefEl = document.querySelector("#scriptureRef");
 const copyBtn = document.querySelector("#copyBtn");
+const shareBtn = document.querySelector("#shareBtn");
 const favoriteBtn = document.querySelector("#favoriteBtn");
 
 // ---------- INIT ----------
@@ -84,6 +85,7 @@ function populateScriptureSelect() {
 function wireEvents() {
   generateBtn.addEventListener("click", handleGenerate);
   copyBtn.addEventListener("click", handleCopy);
+  shareBtn.addEventListener("click", handleShare);
   favoriteBtn.addEventListener("click", handleSaveToJournal);
 }
 
@@ -205,6 +207,38 @@ async function handleCopy() {
     scriptureRefEl.textContent = `${currentScripture.reference} (Copied!)`;
   } catch {
     scriptureRefEl.textContent = `${currentScripture.reference} (Copy not supported)`;
+  }
+}
+
+// ---------- SHARE ----------
+async function handleShare() {
+  if (!currentScripture) {
+    showMessage("Generate a scripture first before sharing.");
+    return;
+  }
+
+  const shareText = `${currentScripture.text} — ${currentScripture.reference} (${currentScripture.volume})`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Scripture from Souls",
+        text: shareText,
+      });
+      scriptureRefEl.textContent = `${currentScripture.reference} (Shared!)`;
+    } catch (err) {
+      console.error("Share cancelled or failed:", err);
+    }
+  } else if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(shareText);
+      scriptureRefEl.textContent = `${currentScripture.reference} (Copied to share!)`;
+    } catch (err) {
+      console.error("Clipboard error:", err);
+      scriptureRefEl.textContent = `${currentScripture.reference} (Share not supported)`;
+    }
+  } else {
+    alert("Sharing is not supported in this browser.");
   }
 }
 

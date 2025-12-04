@@ -68,7 +68,6 @@
     z-index: 20;
   }
   
-
   .header-inner {
     max-width: 1300px;
     margin: 0 auto;
@@ -386,6 +385,13 @@
     line-height: 1.7;
   }
   
+  /* NEW: highlighted scripture state */
+  .journal-scripture.highlighted {
+    background: rgba(255, 255, 160, 0.28);
+    border-radius: 0.8rem;
+    padding: 0.6rem 0.8rem;
+  }
+  
   /* verse numbers in journal paragraphs */
   .journal-scripture .verse-num,
   .journal-scripture .verse-number {
@@ -496,6 +502,7 @@
   /* primary buttons */
   #generateBtn,
   #copyBtn,
+  #shareBtn, /* NEW: share button */
   #favoriteBtn,
   .save-notes-btn {
     padding: 0.55rem 1.3rem;
@@ -665,7 +672,7 @@
      ========================= */
   @media (min-width: 1024px) {
     .site-header {
-      padding: 0.5rem 0.3rem; 
+      padding: 0.5rem 0.3rem;
     }
   
     .header-inner {
@@ -678,12 +685,12 @@
   
     .logo-area {
       justify-content: flex-start;
-      margin-left: 50px; 
+      margin-left: 50px;
     }
   
     .logo-area img {
-      width: 130px; 
-      margin-top: 10px;  
+      width: 130px;
+      margin-top: 10px;
     }
   
     .site-title h1 {
@@ -695,10 +702,10 @@
     }
   
     .main-nav {
-      flex: 1;    
-      justify-content: center; 
-      margin-top: -2.2rem; 
-      margin-bottom: 10px; 
+      flex: 1;
+      justify-content: center;
+      margin-top: -2.2rem;
+      margin-bottom: 10px;
       position: relative;
     }
   
@@ -708,7 +715,7 @@
     }
   
     .home-hero .hero-content {
-      margin-left: 700px; 
+      margin-left: 700px;
     }
   
     .hero {
@@ -724,4 +731,56 @@
       padding-bottom: 4rem;
     }
   }
-  
+/* user highlight span inside notes */
+.journal-scripture .user-highlight {
+  border-radius: 0.25rem;
+  padding: 0 0.1rem;
+}
+
+/* highlight tools row */
+.highlight-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #5d6d8a;
+}
+
+.highlight-label {
+  font-weight: 600;
+}
+
+/* small color dots ("pens") */
+.highlight-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0;
+  background: #ffffff; /* base, real color is set inline */
+  box-shadow: var(--shadow-light);
+}
+
+.highlight-color:hover {
+  transform: translateY(-1px);
+}
+
+/* clear buttons */
+.clear-selection-btn,
+.clear-all-btn {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(140, 100, 255, 0.3);
+  background: #ffffff;
+  color: #4a3e7a;
+  font-size: 0.75rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+}
+
+.clear-selection-btn:hover,
+.clear-all-btn:hover {
+  background: #f4ecff;
+}

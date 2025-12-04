@@ -97,7 +97,7 @@ export async function loadAllScriptures() {
 
   const result = { verses: allVerses, chapters: allChapters };
 
-  loadAllScriptures._cache = result; // cache it
+  loadAllScriptures._cache = result;
 
   return result;
 }

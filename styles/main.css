@@ -62,13 +62,13 @@
   .site-header {
     width: 100%;
     margin: 0;
-    padding: 0.4rem 0 -2rem;     /* mobile header height */
+    padding: 0.4rem 0 -2rem;
     background: linear-gradient(90deg, #f4f7ff, #e6ecff);
     border-bottom: 1px solid #c9d2ea;
     z-index: 20;
   }
   
-  /* row: logo left, nav right (you liked this on mobile) */
+
   .header-inner {
     max-width: 1300px;
     margin: 0 auto;
@@ -158,7 +158,7 @@
   .hero {
     width: 100vw;
     max-width: none;
-    margin: 0 calc(-50vw + 50%); /* full-bleed */
+    margin: 0 calc(-50vw + 50%);
     min-height: 60vh;
     padding: 2.5rem 1.25rem;
     display: flex;
@@ -175,7 +175,7 @@
     content: none;
   }
   
-  /* home hero image (default: desktop/tablet) */
+  /* home hero image default: desktop*/
   .home-hero {
     background-image: url("../images/img4.jpeg");
     background-size: cover;
@@ -183,7 +183,7 @@
     background-position: center 15%;
   }
   
-  /* journal hero image (default: desktop/tablet) */
+  /* journal hero image default: desktop*/
   .journal-hero {
     background-image: url("../images/journal3.jpeg");
     background-size: cover;
@@ -593,7 +593,7 @@
       min-height: 65vh;
     }
   
-    /* ✅ MOBILE HERO IMAGES */
+    /* MOBILE HERO IMAGES */
     .home-hero {
       background-image: url("../images/imgmobile1.jpeg");
       background-position: center top;
@@ -631,7 +631,7 @@
   }
   
   /* =========================
-     RESPONSIVE – TABLET / DESKTOP
+     RESPONSIVE – DESKTOP
      ========================= */
   @media (min-width: 768px) {
     .hero {
